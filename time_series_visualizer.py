@@ -27,10 +27,17 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
-    df_bar = None
+    df_bar = df
+    df_bar["year"] = df.index.year
+    df_bar["month"] = df.index.month
+    df_bar = df_bar.groupby(["year", "month"])["value"].mean()
+    df_bar = df_bar.unstack()
 
     # Draw bar plot
-
+    fig = df_bar.plot.bar(legend=True, figsize=(
+        10, 5), xlabel="Years", ylabel="Average Page Views").figure
+    plt.legend(["January", "February", "March", "April", "May", "June",
+               "July", "August", "September", "October", "November", "December"])
     # Save image and return fig (don't change this part)
     fig.savefig('bar_plot.png')
     return fig
@@ -44,10 +51,6 @@ def draw_box_plot():
     df_box['month'] = [d.strftime('%b') for d in df_box.date]
 
     # Draw box plots (using Seaborn)
-
     # Save image and return fig (don't change this part)
-    fig.savefig('box_plot.png')
-    return fig
-
-
-draw_line_plot()
+    # fig.savefig('box_plot.png')
+    # return fig
